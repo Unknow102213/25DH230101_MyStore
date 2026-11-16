@@ -1,0 +1,43 @@
+﻿
+@model MyStore.Models.ViewModel.ProductDetailsVM
+
+@{
+    ViewBag.Title = "Chi tiết sản phẩm";
+}
+
+@Html.Partial("~/Views/Shared/_ProductDetail.cshtml", Model.product)
+
+@if (Model.product.Quantity > 0)
+{
+    using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("id", Model.product.ProductID)
+
+        <div class="form-inline">
+            <label for="quantity">Số lượng</label>
+            <input id="quantity" name="quantity" type="number" class="form-control" min="1" max="@Model.product.Quantity" value="@Model.quantity" />
+            <button type="submit" class="btn btn-primary">Thêm vào giỏ hàng</button>
+        </div>
+
+        <p class="mt-2">
+            Tạm tính: <strong>@Model.estimatedValue.ToString("N0") đ</strong>
+        </p>
+    }
+}
+else
+{
+    <div class="alert alert-warning">Sản phẩm hiện đã hết hàng.</div>
+}
+
+<h3>Sản phẩm liên quan</h3>
+
+<div class="row">
+    @foreach (var p in Model.RelatedProducts)
+    {
+        <div class="col-sm-4">
+            <a href="@Url.Action("ProductDetails", new { id = p.ProductID })">@p.ProductName</a>
+            - @p.ProductPrice.ToString("N0") đ
+        </div>
+    }
+</div>

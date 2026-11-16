@@ -1,0 +1,19 @@
+﻿
+@model MyStore.Models.Order
+
+@{
+    ViewBag.Title = "Đặt hàng thành công";
+}
+
+<div class="alert alert-success">
+    <h2>ĐẶT HÀNG THÀNH CÔNG</h2>
+    <p>Mã đơn hàng: <strong>#@Model.OrderID</strong></p>
+    <p>Trạng thái: @Model.OrderStatus</p>
+</div>
+
+@Html.Partial("~/Views/Shared/_OrderInvoice.cshtml", Model)
+
+<p>
+    @Html.ActionLink("Lịch sử giao dịch", "OrderHistory", "Order", null, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Tiếp tục mua hàng", "Index", "Home", null, new { @class = "btn btn-default" })
+</p>

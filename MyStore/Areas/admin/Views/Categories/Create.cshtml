@@ -1,0 +1,30 @@
+﻿
+@model MyStore.Models.Category
+
+@{
+    ViewBag.Title = "Thêm danh mục";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>THÊM DANH MỤC</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false,"",new { @class = "text-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.CategoryName)
+
+        @Html.TextBoxFor(m => m.CategoryName,new { @class = "form-control" }
+             )
+
+        @Html.ValidationMessageFor(m => m.CategoryName,"",new { @class = "text-danger" }
+             )
+    </div>
+
+    <button class="btn btn-primary" type="submit">Lưu</button>
+
+    @Html.ActionLink("Quay lại","Index",null,new { @class = "btn btn-default" })
+}

@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewBag.Title = "Quản lý kho hàng";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+
+    var inStock = ViewBag.InStock as System.Collections.Generic.List<MyStore.Models.Product>;
+    var need = ViewBag.NeedRestock as System.Collections.Generic.List<MyStore.Models.Product>;
+}
+
+<h2>QUẢN LÝ KHO HÀNG</h2>
+
+<h3>Danh sách hàng tồn (@inStock.Count)</h3>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Danh mục</th>
+            <th>Tồn kho</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var p in inStock)
+        {
+            <tr>
+                <td>@p.ProductName</td>
+                <td>@p.Category.CategoryName</td>
+                <td>@p.Quantity</td>
+                <td>
+                    @Html.ActionLink("Cập nhật tồn kho", "Edit", "Products", new { id = p.ProductID, area = "admin" }, null)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Danh sách hàng cần nhập (@need.Count)</h3>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Danh mục</th>
+            <th>Tồn kho</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var p in need)
+        {
+            <tr>
+                <td>@p.ProductName</td>
+                <td>@p.Category.CategoryName</td>
+                <td>@p.Quantity</td>
+                <td>
+                    @Html.ActionLink("Nhập hàng", "Edit", "Products", new { id = p.ProductID, area = "admin" }, new { @class = "btn btn-warning btn-xs" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

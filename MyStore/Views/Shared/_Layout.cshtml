@@ -1,0 +1,171 @@
+﻿
+@{
+    var cart = Session["Cart"] as MyStore.Models.ViewModel.Cart;
+    int cartCount = cart == null ? 0 : cart.Items.Sum(x => x.Quantity);
+
+    var categories = new System.Collections.Generic.List<MyStore.Models.Category>();
+
+    using (var menuDb = new MyStore.Models.MyStoreEntities())
+    {
+        categories = menuDb.Categories.OrderBy(c => c.CategoryName).ToList();
+    }
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewBag.Title - My Store</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    @Styles.Render("~/Content/css")
+    <link rel="stylesheet" href="~/Content/myStyle/CustomerHome.css" />
+
+    <style>
+        body {
+            padding-top: 75px;
+        }
+
+        .store-nav {
+            background: #26364a !important;
+        }
+
+            .store-nav .navbar-brand {
+                font-weight: 700;
+            }
+
+            .store-nav .dropdown-menu a {
+                color: #222 !important;
+            }
+
+            .store-nav .nav-link:hover {
+                background: #3d536d;
+            }
+
+        .page-content {
+            min-height: 65vh;
+            padding-top: 22px;
+        }
+
+        .store-footer {
+            margin-top: 40px;
+            padding: 22px;
+            background: #26364a;
+            color: #fff;
+        }
+
+        .alert {
+            margin-top: 12px;
+        }
+    </style>
+
+    @RenderSection("Styles", required: false)
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top store-nav">
+        <div class="container">
+            @Html.ActionLink("MY STORE", "Index", "Home", null, new { @class = "navbar-brand" })
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#storeMenu" aria-controls="storeMenu" aria-expanded="false" aria-label="Mở menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="storeMenu">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        @Html.ActionLink("Trang chủ", "Index", "Home", null, new { @class = "nav-link" })
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Danh mục</a>
+
+                        <ul class="dropdown-menu">
+                            @foreach (var c in categories)
+                            {
+                                <li>
+                                    @Html.ActionLink(c.CategoryName, "Category", "Home", new { id = c.CategoryID }, new { @class = "dropdown-item" })
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    @if (User.Identity.IsAuthenticated && (Session["UserRole"] as string) == "C")
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user"></i> @User.Identity.Name
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    @Html.ActionLink("Hồ sơ khách hàng", "Profile", "Account", null, new { @class = "dropdown-item" })
+                                </li>
+                                <li>
+                                    @Html.ActionLink("Lịch sử mua hàng", "OrderHistory", "Order", null, new { @class = "dropdown-item" })
+                                </li>
+                                <li>
+                                    @Html.ActionLink("Đăng xuất", "Logout", "Account", null, new { @class = "dropdown-item" })
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    else if (User.Identity.IsAuthenticated && (Session["UserRole"] as string) == "A")
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Quản trị", "Index", "Home", new { area = "admin" }, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Đăng xuất", "Logout", "Account", null, new { @class = "nav-link" })
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Đăng ký", "Register", "Account", null, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Đăng nhập", "Login", "Account", null, new { @class = "nav-link" })
+                        </li>
+                    }
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index2", "Cart")">
+                            <i class="fas fa-shopping-cart"></i> Giỏ hàng (@cartCount)
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container page-content">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        @RenderBody()
+    </div>
+
+    <footer class="store-footer">
+        <div class="container">
+            &copy; @DateTime.Now.Year - My Store
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryval")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

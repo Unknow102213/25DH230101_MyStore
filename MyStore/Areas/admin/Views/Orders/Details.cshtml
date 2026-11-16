@@ -1,0 +1,15 @@
+﻿
+@model MyStore.Models.Order
+
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>CHI TIẾT ĐƠN HÀNG #@Model.OrderID</h2>
+
+@Html.Partial("~/Views/Shared/_OrderInvoice.cshtml", Model)
+
+@Html.ActionLink("Cập nhật trạng thái", "UpdateStatus", new { id = Model.OrderID }, new { @class = "btn btn-primary" })
+
+@Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-default" })

@@ -1,0 +1,161 @@
+﻿
+@model MyStore.Models.ViewModel.AdminOrderSearchVM
+
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>DANH SÁCH ĐƠN HÀNG</h2>
+
+@using (Html.BeginForm("Index", "Orders", FormMethod.Get, new { @class = "row g-2 align-items-end mb-3" }))
+{
+    <div class="col-md-3">
+        <label class="form-label">Tên khách hàng</label>
+        @Html.TextBox("customerName", Model.CustomerName, new
+        {
+            @class = "form-control",
+            placeholder = "Nhập tên khách hàng"
+        })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Trạng thái thanh toán</label>
+        @Html.DropDownList(
+                 "paymentStatus",
+                 (SelectList)ViewBag.PaymentStatuses,
+                 "-- Tất cả trạng thái --",
+                 new { @class = "form-select" }
+             )
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Ngày đặt hàng</label>
+        @Html.TextBox(
+                 "orderDate",
+                 Model.OrderDate.HasValue
+                     ? Model.OrderDate.Value.ToString("yyyy-MM-dd")
+                     : "",
+                 new
+                 {
+                     @class = "form-control",
+                     type = "date"
+                 }
+             )
+    </div>
+
+    <div class="col-md-3">
+        <button class="btn btn-primary" type="submit">
+            Tìm kiếm
+        </button>
+    </div>
+}
+
+@if (!Model.Orders.Any())
+{
+    <div class="alert alert-info">
+        KHÔNG CÓ đơn hàng phù hợp.
+    </div>
+}
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Ngày đặt hàng</th>
+            <th>Tên khách hàng</th>
+            <th>Tổng giá trị</th>
+            <th>Trạng thái đơn hàng</th>
+            <th>Trạng thái thanh toán</th>
+            <th>Phương thức giao hàng</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var o in Model.Orders)
+        {
+            <tr>
+                <td>
+                    @o.OrderDate.ToString("dd/MM/yyyy")
+                </td>
+
+                <td>
+                    @o.Customer.CustomerName
+                </td>
+
+                <td>
+                    @o.TotalAmount.ToString("N0") đ
+                </td>
+
+                <td>
+                    @if (o.OrderStatus == "Chờ thanh toán")
+                    {
+                        <span class="badge bg-warning text-dark">
+                            @o.OrderStatus
+                        </span>
+                    }
+                    else if (o.OrderStatus == "Đang xử lý")
+                    {
+                        <span class="badge bg-info text-dark">
+                            @o.OrderStatus
+                        </span>
+                    }
+                    else if (o.OrderStatus == "Đang vận chuyển")
+                    {
+                        <span class="badge bg-primary">
+                            @o.OrderStatus
+                        </span>
+                    }
+                    else if (o.OrderStatus == "Đã giao")
+                    {
+                        <span class="badge bg-success">
+                            @o.OrderStatus
+                        </span>
+                    }
+                    else if (o.OrderStatus == "Đã hủy")
+                    {
+                        <span class="badge bg-danger">
+                            @o.OrderStatus
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">
+                            @(o.OrderStatus ?? "Chưa xác định")
+                        </span>
+                    }
+                </td>
+
+                <td>
+                    @o.PaymentStatus
+                </td>
+
+                <td>
+                    @o.ShippingMethod
+                </td>
+
+                <td>
+                    @Html.ActionLink(
+                             "Chi tiết đơn hàng",
+                             "Details",
+                             new { id = o.OrderID },
+                             new { @class = "btn btn-info btn-sm" }
+                         )
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="text-center">
+    @Html.PagedListPager(
+            Model.Orders,
+            page => Url.Action("Index", new
+            {
+                page,
+                customerName = Model.CustomerName,
+                paymentStatus = Model.PaymentStatus,
+                orderDate = Model.OrderDate
+            })
+        )
+</div>

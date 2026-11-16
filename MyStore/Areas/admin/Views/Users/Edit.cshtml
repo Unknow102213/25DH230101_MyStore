@@ -1,0 +1,31 @@
+﻿
+@model MyStore.Models.User
+
+@{
+    ViewBag.Title = "Sửa Admin";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>CẬP NHẬT TÀI KHOẢN ADMIN</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" name="Username" value="@Model.Username" />
+
+    <p>
+        Tài khoản: <strong>@Model.Username</strong>
+    </p>
+
+    <div class="form-group">
+        <label>Mật khẩu mới (để trống nếu không đổi)</label>
+        <input name="Password" type="password" class="form-control" />
+    </div>
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    <button class="btn btn-primary">Lưu</button>
+
+    @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-default" })
+}

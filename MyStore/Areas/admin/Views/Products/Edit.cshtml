@@ -1,0 +1,32 @@
+﻿
+@model MyStore.Models.Product
+
+@{
+    ViewBag.Title = "Sửa sản phẩm";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>CẬP NHẬT SẢN PHẨM</h2>
+
+@using (Html.BeginForm("Edit", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ProductID)
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.Partial("PV_CreateEditProduct", Model)
+
+    <div class="form-group">
+        <label>Ảnh sản phẩm mới (không bắt buộc)</label>
+        <input type="file" name="imageFile" accept="image/*" class="form-control" />
+    </div>
+
+    <p>
+        Ảnh hiện tại:
+        <img src="@Url.Content(Model.ProductImage ?? "~/Images/no-image.svg")" style="max-height:100px" />
+    </p>
+
+    <button class="btn btn-primary" type="submit">Lưu thay đổi</button>
+
+    @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-default" })
+}

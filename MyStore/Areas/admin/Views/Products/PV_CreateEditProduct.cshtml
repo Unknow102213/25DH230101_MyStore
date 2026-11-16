@@ -1,0 +1,42 @@
+﻿
+@model MyStore.Models.Product
+
+<div class="form-group">
+    @Html.LabelFor(m => m.ProductName)
+    <div>
+        @Html.TextBoxFor(m => m.ProductName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.CategoryID, "Danh mục")
+    <div>
+        @Html.DropDownList("CategoryID", (SelectList)ViewBag.CategoryID, "-- Chọn danh mục --", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.ProductPrice)
+    <div>
+        @Html.TextBoxFor(m => m.ProductPrice, new { @class = "form-control", type = "number", step = "0.01", min = "0.01" })
+        @Html.ValidationMessageFor(m => m.ProductPrice, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Quantity)
+    <div>
+        @Html.TextBoxFor(m => m.Quantity, new { @class = "form-control", type = "number", min = "0" })
+        @Html.ValidationMessageFor(m => m.Quantity, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(m => m.ProductDescription)
+    <div>
+        @Html.TextAreaFor(m => m.ProductDescription, new { @class = "form-control", rows = 5 })
+        @Html.ValidationMessageFor(m => m.ProductDescription, "", new { @class = "text-danger" })
+    </div>
+</div>

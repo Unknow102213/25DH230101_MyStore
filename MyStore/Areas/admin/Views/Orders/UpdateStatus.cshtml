@@ -1,0 +1,28 @@
+﻿
+@model MyStore.Models.Order
+
+@{
+    ViewBag.Title = "Cập nhật trạng thái";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>CẬP NHẬT TRẠNG THÁI ĐƠN HÀNG #@Model.OrderID</h2>
+
+<p>Khách hàng: @Model.Customer.CustomerName</p>
+
+<p>Trạng thái hiện tại: <strong>@Model.OrderStatus</strong></p>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        <label>Trạng thái mới</label>
+        @Html.DropDownList("orderStatus", (SelectList)ViewBag.Statuses, "-- Chọn trạng thái --", new { @class = "form-control" })
+    </div>
+
+    <button class="btn btn-primary">Cập nhật trạng thái</button>
+
+    @Html.ActionLink("Hủy", "Details", new { id = Model.OrderID }, new { @class = "btn btn-default" })
+}

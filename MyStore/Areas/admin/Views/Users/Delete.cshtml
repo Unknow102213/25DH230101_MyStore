@@ -1,0 +1,22 @@
+﻿
+@model MyStore.Models.User
+
+@{
+    ViewBag.Title = "Xóa Admin";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>XÓA TÀI KHOẢN ADMIN</h2>
+
+<p>
+    Bạn có chắc muốn xóa tài khoản <strong>@Model.Username</strong>?
+</p>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <button class="btn btn-danger">Xóa</button>
+
+    @Html.ActionLink("Hủy", "Index", null, new { @class = "btn btn-default" })
+}

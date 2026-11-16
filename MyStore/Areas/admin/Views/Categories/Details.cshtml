@@ -1,0 +1,44 @@
+﻿
+@model MyStore.Models.Category
+
+@{
+    ViewBag.Title = "Chi tiết danh mục";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>CHI TIẾT DANH MỤC</h2>
+
+<p>
+    <strong>Tên danh mục:</strong> @Model.CategoryName
+</p>
+
+<h3>Sản phẩm thuộc danh mục (@Model.Products.Count)</h3>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+            <th>Tồn kho</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var p in Model.Products)
+        {
+            <tr>
+                <td>@p.ProductName</td>
+                <td>@p.ProductPrice.ToString("N0") đ</td>
+                <td>@p.Quantity</td>
+                <td>
+                    @Html.ActionLink("Chi tiết","Details","Products",new { id = p.ProductID, area = "admin" },null)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@Html.ActionLink("Sửa", "Edit", new { id = Model.CategoryID }, new { @class = "btn btn-primary" })
+
+@Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-default" })

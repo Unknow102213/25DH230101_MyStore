@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "Tổng quan";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>TỔNG QUAN HỆ THỐNG</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h4>Sản phẩm</h4>
+            <h2>@ViewBag.ProductCount</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h4>Danh mục</h4>
+            <h2>@ViewBag.CategoryCount</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h4>Khách hàng</h4>
+            <h2>@ViewBag.CustomerCount</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h4>Đơn hàng</h4>
+            <h2>@ViewBag.OrderCount</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h4>Sản phẩm hết hàng</h4>
+            <h2>@ViewBag.OutOfStock</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h4>Doanh thu đơn đã giao</h4>
+            <h2>@String.Format("{0:N0} đ", ViewBag.TotalRevenue)</h2>
+        </div>
+    </div>
+</div>

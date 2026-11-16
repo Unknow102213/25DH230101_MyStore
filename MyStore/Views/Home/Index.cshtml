@@ -1,0 +1,134 @@
+﻿
+@model MyStore.Models.ViewModel.HomeProductVM
+
+@{
+    ViewBag.Title = "Trang chủ";
+}
+
+<section class="jumbotron home-banner">
+    <h2>Chào mừng đến với My Store</h2>
+    <p>Tìm kiếm và lựa chọn sản phẩm phù hợp với bạn.</p>
+    <a class="btn btn-primary btn-lg" href="#products">Bắt đầu mua sắm</a>
+</section>
+
+<div class="home-search">
+    @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "form-inline" }))
+    {
+        <div class="form-group">
+            @Html.TextBoxFor(m => m.SearchTerm, new
+            {
+                @class = "form-control",
+                placeholder = "Tên, mô tả hoặc danh mục sản phẩm"
+            })
+        </div>
+
+        <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+    }
+</div>
+
+<!-- SẢN PHẨM BÁN CHẠY -->
+<section class="product-section featureProd">
+    <h3>Sản phẩm bán chạy</h3>
+
+    <div class="row">
+        @foreach (var p in Model.FeaturedProducts)
+        {
+            <div class="col-sm-6 col-md-3">
+                <div class="thumbnail product-card">
+                    <a href="@Url.Action("ProductDetails", new { id = p.ProductID })">
+                        <img src="@Url.Content(p.ProductImage ?? "~/Images/no-image.svg")"
+                             alt="@p.ProductName"
+                             class="product-image" />
+                    </a>
+
+                    <div class="caption">
+                        <h4>@p.ProductName</h4>
+
+                        <p class="product-price">
+                            @p.ProductPrice.ToString("N0") đ
+                        </p>
+
+                        <p class="product-sold">
+                            Đã bán: @p.QuantitySold
+                        </p>
+
+                        <p>
+                            <a class="btn btn-default"
+                               href="@Url.Action("ProductDetails", new { id = p.ProductID })">
+                                Chi tiết
+                            </a>
+                        </p>
+
+                        @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("id", p.ProductID)
+                            @Html.Hidden("quantity", 1)
+
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                Thêm vào giỏ
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- SẢN PHẨM HIỆN CÓ -->
+<section class="product-section listProduct" id="products">
+    <h3>Sản phẩm hiện có</h3>
+
+    <div class="row">
+        @foreach (var p in Model.NewProducts)
+        {
+            <div class="col-sm-6 col-md-3">
+                <div class="thumbnail product-card">
+                    <a href="@Url.Action("ProductDetails", new { id = p.ProductID })">
+                        <img src="@Url.Content(p.ProductImage ?? "~/Images/no-image.svg")"
+                             alt="@p.ProductName"
+                             class="product-image" />
+                    </a>
+
+                    <div class="caption">
+                        <h4>@p.ProductName</h4>
+
+                        <p class="product-price">
+                            @p.ProductPrice.ToString("N0") đ
+                        </p>
+
+                        <p>
+                            <a class="btn btn-default"
+                               href="@Url.Action("ProductDetails", new { id = p.ProductID })">
+                                Xem chi tiết
+                            </a>
+                        </p>
+
+                        @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("id", p.ProductID)
+                            @Html.Hidden("quantity", 1)
+
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                Thêm vào giỏ
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="text-center product-pager">
+        @Html.PagedListPager(
+                 Model.NewProducts,
+                 page => Url.Action("Index", new
+                 {
+                     page,
+                     searchTerm = Model.SearchTerm
+                 })
+             )
+    </div>
+</section>

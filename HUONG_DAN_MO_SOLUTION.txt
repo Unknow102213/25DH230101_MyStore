@@ -1,0 +1,28 @@
+HUONG DAN MO DUNG PHIEN BAN DA CAP NHAT
+======================================
+
+1. Giai nen toan bo MyStore_Updated.zip vao mot thu muc RIENG.
+   Khong giai nen de ghi de len thu muc project cu.
+
+2. Mo Visual Studio 2022 -> File -> Open -> Project/Solution.
+
+3. Chon DUY NHAT file: MyStore_Updated.sln (nam o thu muc goc vua giai nen).
+   Khong mo file BE01-03.sln trong thu muc cu cua ban.
+
+4. Trong Solution Explorer, mo project MyStore. Cac phan moi duoc dat tai:
+   - Areas/admin/Controllers: OrdersController, InventoryController,
+     CustomersController, UsersController.
+   - Areas/admin/Views: Orders, Inventory, Customers, Users.
+   - Views/Order: MyOrder, OrderDetail.
+   - Views/Shared: _ProductDetail, _OrderInvoice.
+
+5. Neu Solution Explorer chua hien cac file: bam chuot phai project MyStore ->
+   Reload Project (neu co), sau do Build -> Rebuild Solution.
+   Kiem tra bieu tuong project khong o trang thai unavailable/unloaded.
+
+6. Database_Update.sql nam trong thu muc MyStore. Sao luu database truoc khi
+   chay script. Kiem tra connection string trong Web.config truoc khi F5.
+
+LUU Y: Ban cap nhat co solution rieng ten MyStore_Updated.sln de tranh mo nham
+solution cu. Ten project/assembly van giu la MyStore de khong lam thay doi
+namespace va cau hinh hien co.

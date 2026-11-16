@@ -1,0 +1,44 @@
+﻿
+@model IEnumerable<MyStore.Models.Customer>
+
+@{
+    ViewBag.Title = "Quản lý khách hàng";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>DANH SÁCH KHÁCH HÀNG</h2>
+
+@using (Html.BeginForm("Index", "Customers", FormMethod.Get, new { @class = "form-inline" }))
+{
+    <input name="searchTerm"
+           value="@ViewBag.SearchTerm"
+           class="form-control"
+           placeholder="Tên, số điện thoại hoặc email" />
+
+    <button class="btn btn-primary">Tìm kiếm</button>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Họ tên</th>
+            <th>Điện thoại</th>
+            <th>Email</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.CustomerName</td>
+                <td>@c.CustomerPhone</td>
+                <td>@c.CustomerEmail</td>
+                <td>
+                    @Html.ActionLink("Chi tiết", "Details", new { id = c.CustomerID }, new { @class = "btn btn-info btn-xs" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

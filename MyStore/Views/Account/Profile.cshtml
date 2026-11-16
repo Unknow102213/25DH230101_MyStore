@@ -1,0 +1,27 @@
+﻿
+@model MyStore.Models.Customer
+
+@{
+    ViewBag.Title = "Hồ sơ khách hàng";
+}
+
+<h2>HỒ SƠ KHÁCH HÀNG</h2>
+
+<dl class="dl-horizontal">
+    <dt>Họ tên</dt>
+    <dd>@Model.CustomerName</dd>
+
+    <dt>Tên đăng nhập</dt>
+    <dd>@Model.Username</dd>
+
+    <dt>Số điện thoại</dt>
+    <dd>@Model.CustomerPhone</dd>
+
+    <dt>Email</dt>
+    <dd>@Model.CustomerEmail</dd>
+
+    <dt>Địa chỉ</dt>
+    <dd>@Model.CustomerAddress</dd>
+</dl>
+
+@Html.ActionLink("Lịch sử giao dịch", "OrderHistory", "Order", null, new { @class = "btn btn-primary" })

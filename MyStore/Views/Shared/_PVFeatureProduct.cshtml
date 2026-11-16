@@ -1,0 +1,42 @@
+﻿
+@model MyStore.Models.ViewModel.HomeProductVM
+
+<link rel="stylesheet" type="text/css" href="~/Content/myStyle/CustomerHome.css" />
+
+@if (Model.FeaturedProducts != null && Model.FeaturedProducts.Any())
+{
+    <section class="container-fluid featureProd">
+        <h2>Sản phẩm nổi bật</h2>
+
+        <div class="row">
+            @foreach (var product in Model.FeaturedProducts)
+            {
+                <div class="col-sm-6 col-md-3">
+                    <div class="thumbnail">
+                        <a href="@Url.Action("ProductDetails", "Home", new { id = product.ProductID })">
+                            <img src="@Url.Content(product.ProductImage ?? "~/Images/no-image.svg")" style="height:150px;object-fit:contain" />
+                        </a>
+
+                        <div class="caption">
+                            <p class="prodPrice">@product.ProductPrice.ToString("N0") đ</p>
+                            <p class="prodName">@product.ProductName</p>
+                            <p class="prodCate">@product.Category.CategoryName</p>
+                            <p>Đã bán: @product.QuantitySold</p>
+
+                            @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("id", product.ProductID)
+                                @Html.Hidden("quantity", 1)
+
+                                <button class="btn btn-primary btn-sm" type="submit">Thêm vào giỏ</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    <hr />
+}

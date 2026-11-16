@@ -1,0 +1,212 @@
+﻿
+@model MyStore.Models.ViewModel.OrderHistoryVM
+
+@{
+    ViewBag.Title = "Đơn hàng của tôi";
+
+    var statuses = new[]
+    {
+        "Tất cả",
+        "Chờ thanh toán",
+        "Đang xử lý",
+        "Đang vận chuyển",
+        "Đã giao",
+        "Đã hủy"
+    };
+}
+
+<h2>ĐƠN HÀNG CỦA TÔI</h2>
+
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<ul class="nav nav-tabs flex-wrap mb-3">
+    @foreach (var s in statuses)
+    {
+        <li class="nav-item">
+            <a class="nav-link @(Model.Status == s ? "active" : "")"
+               href="@Url.Action("OrderHistory", new { status = s, searchTerm = Model.SearchTerm })">
+                @(s == "Tất cả" ? "Tất cả đơn" : s)
+            </a>
+        </li>
+    }
+</ul>
+
+@using (Html.BeginForm("OrderHistory", "Order", FormMethod.Get, new { @class = "input-group mb-4" }))
+{
+    @Html.Hidden("status", Model.Status)
+
+    @Html.TextBox("searchTerm", Model.SearchTerm, new
+    {
+        @class = "form-control",
+        placeholder = "Tìm đơn hàng theo Mã đơn hàng hoặc Tên sản phẩm"
+    })
+
+    <button class="btn btn-outline-primary" type="submit">
+        Tìm đơn hàng
+    </button>
+}
+
+@if (Model.Groups == null || !Model.Groups.Any())
+{
+    <div class="alert alert-info">
+        @(!Model.HasAnyOrders
+            ? "BẠN CHƯA CÓ ĐƠN HÀNG NÀO. HÃY ĐẶT ĐƠN NGAY."
+            : "Không có đơn hàng phù hợp với điều kiện tìm kiếm hoặc trạng thái này.")
+
+        @Html.ActionLink("Đặt đơn ngay", "Index", "Home")
+    </div>
+}
+else
+{
+    foreach (var group in Model.Groups)
+    {
+        <h4 class="mt-4">
+            @group.Status
+            <small class="text-muted">(@group.TotalCount đơn hàng)</small>
+        </h4>
+
+        foreach (var order in group.Orders)
+        {
+            <div class="card mb-3">
+                <div class="card-header d-flex justify-content-between">
+                    <strong>
+                        @(order.OrderStatus == "Đã giao"
+                            ? "Giao hàng thành công"
+                            : order.OrderStatus)
+                    </strong>
+
+                    <span>
+                        Đơn hàng #@order.OrderID -
+                        @order.OrderDate.ToString("dd/MM/yyyy")
+                    </span>
+                </div>
+
+                <div class="card-body">
+                    @foreach (var detail in order.OrderDetails)
+                    {
+                        <div class="row align-items-center border-bottom py-2">
+                            <div class="col-2 col-md-1">
+                                <img src="@Url.Content(detail.Product.ProductImage ?? "~/Images/no-image.svg")"
+                                     alt="@detail.Product.ProductName"
+                                     class="img-fluid"
+                                     style="max-height:85px;object-fit:contain" />
+                            </div>
+
+                            <div class="col-7 col-md-8">
+                                <p class="mb-1">
+                                    @Html.ActionLink(
+                                                  detail.Product.ProductName,
+                                                  "ProductDetails",
+                                                  "Home",
+                                                  new { id = detail.ProductID },
+                                                  null
+                                              )
+                                </p>
+
+                                <small class="text-muted">
+                                    Số lượng: x@detail.Quantity
+                                </small>
+                            </div>
+
+                            <div class="col-3 text-end">
+                                @detail.TotalPrice.ToString("N0") đ
+                            </div>
+                        </div>
+                    }
+
+                <div class="text-end mt-3">
+                    <p class="mb-2">
+                        Tổng tiền:
+                        <strong>@order.TotalAmount.ToString("N0") đ</strong>
+                    </p>
+
+                    @Html.ActionLink(
+                                       "Mua lại",
+                                       "Reorder",
+                                       new { id = order.OrderID },
+                                       new { @class = "btn btn-outline-primary" }
+                                   )
+
+                    @Html.ActionLink(
+                                       "Xem hóa đơn",
+                                       "OrderDetail",
+                                       new { id = order.OrderID },
+                                       new { @class = "btn btn-outline-secondary" }
+                                   )
+
+                    @if (order.OrderStatus == "Chờ thanh toán" ||
+                         order.OrderStatus == "Đang xử lý")
+                    {
+                        using (Html.BeginForm(
+                            "CancelOrder",
+                            "Order",
+                            new { id = order.OrderID },
+                            FormMethod.Post,
+                            new { style = "display:inline-block", onsubmit = "return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="btn btn-danger">
+                                Hủy đơn
+                            </button>
+                        }
+                    }
+
+
+                    @if (order.OrderStatus == "Đang vận chuyển")
+                    {
+                        using (Html.BeginForm(
+                            "ConfirmReceived",
+                            "Order",
+                            new { id = order.OrderID },
+                            FormMethod.Post,
+                            new
+                            {
+                                style = "display:inline-block",
+                                onsubmit = "return confirm('Bạn xác nhận đã nhận được đơn hàng này?');"
+                            }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="btn btn-success">
+                                Đã nhận được hàng
+                            </button>
+                        }
+                    }
+
+                </div>
+                </div>
+            </div>
+        }
+
+        if (group.TotalCount > 2 && !Model.ShowMore)
+        {
+            <p>
+                @Html.ActionLink(
+                              "Xem thêm (tối đa 50 đơn)",
+                              "OrderHistory",
+                              new
+                              {
+                                  status = group.Status,
+                                  searchTerm = Model.SearchTerm,
+                                  more = true
+                              },
+                              new { @class = "btn btn-light" }
+                          )
+            </p>
+        }
+    }
+}

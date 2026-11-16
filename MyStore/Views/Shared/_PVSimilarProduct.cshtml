@@ -1,0 +1,44 @@
+﻿
+@model MyStore.Models.ViewModel.Cart
+
+@using PagedList.Mvc
+
+<link rel="stylesheet" type="text/css" href="~/Content/myStyle/CustomerHome.css" />
+
+@if (Model.SimilarProducts != null && Model.SimilarProducts.Any())
+{
+    <section class="listProduct">
+        <h2>Sản phẩm tương tự</h2>
+
+        <div class="row">
+            @foreach (var product in Model.SimilarProducts)
+            {
+                <div class="col-sm-6 col-md-3">
+                    <div class="thumbnail">
+                        <a href="@Url.Action("ProductDetails", "Home", new { id = product.ProductID })">
+                            <img src="@Url.Content(product.ProductImage ?? "~/Images/no-image.svg")" style="height:140px;object-fit:contain" />
+                        </a>
+
+                        <div class="caption">
+                            <h4>@product.ProductName</h4>
+                            <p>@product.ProductPrice.ToString("N0") đ</p>
+
+                            @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("id", product.ProductID)
+                                @Html.Hidden("quantity", 1)
+
+                                <button class="btn btn-primary btn-sm" type="submit">Thêm vào giỏ</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    <div class="text-center">
+        @Html.PagedListPager(Model.SimilarProducts, page => Url.Action("Index2", "Cart", new { page }))
+    </div>
+}

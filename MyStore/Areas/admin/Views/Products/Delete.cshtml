@@ -1,0 +1,20 @@
+﻿
+@model MyStore.Models.Product
+
+@{
+    ViewBag.Title = "Xóa sản phẩm";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>XÓA SẢN PHẨM</h2>
+
+<p>Bạn có chắc muốn xóa <strong>@Model.ProductName</strong>?</p>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <button type="submit" class="btn btn-danger">Xóa</button>
+
+    @Html.ActionLink("Hủy", "Index", null, new { @class = "btn btn-default" })
+}

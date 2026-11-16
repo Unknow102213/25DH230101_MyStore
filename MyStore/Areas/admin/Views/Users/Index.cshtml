@@ -1,0 +1,37 @@
+﻿
+@model IEnumerable<MyStore.Models.User>
+
+@{
+    ViewBag.Title = "Quản lý người dùng";
+    Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>QUẢN LÝ TÀI KHOẢN ADMIN</h2>
+
+<p>
+    @Html.ActionLink("Thêm tài khoản Admin", "Create", null, new { @class = "btn btn-primary" })
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tên đăng nhập</th>
+            <th>Vai trò</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.Username</td>
+                <td>Quản trị viên</td>
+                <td>
+                    @Html.ActionLink("Sửa", "Edit", new { id = u.Username }, new { @class = "btn btn-primary btn-xs" })
+                    @Html.ActionLink("Xóa", "Delete", new { id = u.Username }, new { @class = "btn btn-danger btn-xs" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
