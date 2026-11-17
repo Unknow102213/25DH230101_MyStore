@@ -1,5 +1,4 @@
-﻿
-@model MyStore.Models.ViewModel.ProductDetailsVM
+﻿@model MyStore.Models.ViewModel.ProductDetailsVM
 
 @{
     ViewBag.Title = "Chi tiết sản phẩm";
@@ -16,28 +15,36 @@
 
         <div class="form-inline">
             <label for="quantity">Số lượng</label>
-            <input id="quantity" name="quantity" type="number" class="form-control" min="1" max="@Model.product.Quantity" value="@Model.quantity" />
-            <button type="submit" class="btn btn-primary">Thêm vào giỏ hàng</button>
-        </div>
 
-        <p class="mt-2">
-            Tạm tính: <strong>@Model.estimatedValue.ToString("N0") đ</strong>
-        </p>
+            <input id="quantity"
+                   name="quantity"
+                   type="number"
+                   class="form-control"
+                   min="1"
+                   max="@Model.product.Quantity"
+                   value="@Model.quantity" />
+
+            <div class="mt-2">
+                Tạm tính:
+                <strong>@Model.estimatedValue.ToString("N0") đ</strong>
+
+                <button type="submit"
+                        formaction="@Url.Action("ProductDetails", "Home", new { id = Model.product.ProductID })"
+                        formmethod="get"
+                        class="btn btn-outline-primary ms-2">
+                    Cập nhật
+                </button>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-2">
+                Thêm vào giỏ hàng
+            </button>
+        </div>
     }
 }
 else
 {
-    <div class="alert alert-warning">Sản phẩm hiện đã hết hàng.</div>
+    <div class="alert alert-warning">
+        Sản phẩm hiện đã hết hàng.
+    </div>
 }
-
-<h3>Sản phẩm liên quan</h3>
-
-<div class="row">
-    @foreach (var p in Model.RelatedProducts)
-    {
-        <div class="col-sm-4">
-            <a href="@Url.Action("ProductDetails", new { id = p.ProductID })">@p.ProductName</a>
-            - @p.ProductPrice.ToString("N0") đ
-        </div>
-    }
-</div>

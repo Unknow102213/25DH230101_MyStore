@@ -246,7 +246,7 @@ namespace MyStore.Controllers
                     {
                         Status = itemStatus,
                         TotalCount = matching.Count,
-                        Orders = matching.ToList()
+                        Orders = matching.Take(more ? 50 : 2).ToList()
                     });
                 }
             }
