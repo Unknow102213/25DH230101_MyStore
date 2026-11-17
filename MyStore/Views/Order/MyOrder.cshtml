@@ -141,10 +141,10 @@ else
                                    )
 
                     @Html.ActionLink(
-                                       "Xem hóa đơn",
+                                       "Xem chi tiết",
                                        "OrderDetail",
                                        new { id = order.OrderID },
-                                       new { @class = "btn btn-outline-secondary" }
+                                       new { @class = "btn btn-outline-primary" }
                                    )
 
                     @if (order.OrderStatus == "Chờ thanh toán" ||
@@ -190,23 +190,6 @@ else
                 </div>
                 </div>
             </div>
-        }
-
-        if (group.TotalCount > 2 && !Model.ShowMore)
-        {
-            <p>
-                @Html.ActionLink(
-                              "Xem thêm (tối đa 50 đơn)",
-                              "OrderHistory",
-                              new
-                              {
-                                  status = group.Status,
-                                  searchTerm = Model.SearchTerm,
-                                  more = true
-                              },
-                              new { @class = "btn btn-light" }
-                          )
-            </p>
-        }
+        }     
     }
 }

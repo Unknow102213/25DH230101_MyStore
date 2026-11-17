@@ -204,22 +204,15 @@ namespace MyStore.Controllers
             {
                 int orderId;
 
-                if (Int32.TryParse(searchTerm, out orderId))
+                if (Int32.TryParse(searchTerm.Trim(), out orderId))
                 {
-                    query = query.Where(o =>
-                        o.OrderID == orderId ||
-                        o.OrderDetails.Any(d =>
-                            d.Product.ProductName.Contains(searchTerm)
-                        )
-                    );
+                    // Nếu nhập số: chỉ tìm chính xác theo mã đơn hàng.
+                    query = query.Where(o => o.OrderID == orderId);
                 }
                 else
                 {
-                    query = query.Where(o =>
-                        o.OrderDetails.Any(d =>
-                            d.Product.ProductName.Contains(searchTerm)
-                        )
-                    );
+                    // Nếu nhập chữ: tìm theo tên sản phẩm.
+                    query = query.Where(o =>o.OrderDetails.Any(d => d.Product.ProductName.Contains(searchTerm.Trim())));
                 }
             }
 
@@ -253,7 +246,7 @@ namespace MyStore.Controllers
                     {
                         Status = itemStatus,
                         TotalCount = matching.Count,
-                        Orders = matching.Take(more ? 50 : 2).ToList()
+                        Orders = matching.ToList()
                     });
                 }
             }

@@ -2,15 +2,14 @@
 @model MyStore.Models.ViewModel.ProductSearchVM
 
 @{
-    ViewBag.Title = "Quản lý hàng hóa";
+    ViewBag.Title = "Quản lý sản phẩm";
     Layout = "~/Areas/admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>QUẢN LÝ HÀNG HÓA</h2>
+<h2>QUẢN LÝ SẢN PHẨM</h2>
 
 <p>
-    @Html.ActionLink("Thêm sản phẩm", "Create", null, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Quản lý kho", "Index", "Inventory", new { area = "admin" }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Thêm sản phẩm", "Create", null, new { @class = "btn btn-primary" })    
 </p>
 
 @using (Html.BeginForm("Index", "Products", FormMethod.Get, new { @class = "form-inline" }))
